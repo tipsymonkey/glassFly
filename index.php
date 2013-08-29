@@ -26,17 +26,16 @@ function getTimeStamp ()
 
 
 //Create hard codeded xml
-$xmlData = <<< END
-    <?xml version="1.0" encoding="UTF-8"?>
+
+$xmlstr = <<< XML
+<?xml version="1.0" encoding="UTF-8"?>
 <entry xmlns="http://www.w3.org/2005/Atom" xmlns:user="http://user.openfly.shutterfly.com/v1.0">
   <category term="user" scheme="http://openfly.shutterfly.com/v1.0" />
   <user:password>sNf86VJG6N</user:password>
-</entry> 
-END;
+</entry>
+XML;
 
 
-$xmlshit = simplexml_load_string($xmlData);
-//Using this for debuging, this will have to be set dynamically in real life. 
 $auth_url = "/user/ravasquez@shutterfly.com/auth?oflyAppId=".$sfly_app_id;
 
 
@@ -46,45 +45,17 @@ $auth_url = "/user/ravasquez@shutterfly.com/auth?oflyAppId=".$sfly_app_id;
 
 $url = $sfly_base_url.$auth_url;
 
-$ch = curl_init();
-$curlConfig = array(
-    CURLOPT_URL            => $url,
-    CURLOPT_POST           => true,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_POSTFIELDS     => $xmlshit
-);
 
+$curl = curl_init();
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/xml'));
+curl_setopt($curl, CURLOPT_POST, 1);
+curl_setopt($curl, CURLOPT_POSTFIELDS, $xmlstr);
+curl_setopt($curl, CURLOPT_HEADER, true);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec ($curl);
+curl_close ($curl);
 
-curl_setopt_array($ch, $curlConfig);
-$result = curl_exec($ch);
-curl_close($ch);
-
-echo $result;
-
-
-
-    $xmlData =<<< END
-03
-<?xml version="1.0"?>
-04
-<datas>
-05
-  <books> 
-06
-    <book>
-07
-      <id>1</id>
-08
-      <title>PHP Undercover</title>     
-09
-      <author>Wiwit Siswoutomo</author>
-10
-    </book>
-11
-  </books>
-12
-</datas>
-13
-END;
+echo $response;
 
 ?>
