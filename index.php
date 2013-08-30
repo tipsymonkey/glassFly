@@ -8,7 +8,7 @@ require_once 'config.php';
 function getSigniture ($input_url)
 {
 	$time_stamp = getTimeStamp();
-	$base_string = $sfly_shared_secret.$input_url."&oflyHashMeth=MD5&oflyTimestamp=".@time_stamp;
+	$base_string = $sfly_shared_secret.$input_url."&oflyHashMeth=MD5&oflyTimestamp=".$time_stamp;
 	return md5($base_string);
 
 }
@@ -46,16 +46,13 @@ $category->appendChild($dom->createTextNode(''));
 
 $userpass = $element->appendChild($dom->createElement('user:password','password'));
 
-return dom->saveXML();
+return $dom->saveXML();
 }
 
 
 /*
     This is going to be debug section stuff. This doens't need to exist / only for now. 
-*/
 
-
-//Create hard codeded xml
 
 $xmlstr = <<< XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -65,14 +62,15 @@ $xmlstr = <<< XML
 </entry>
 XML;
 
+*/
 
 $auth_url = "/user/ravasquez@shutterfly.com/auth?oflyAppId=".$sfly_app_id;
 
 
 
 
-
 /*
+
 $url = $sfly_base_url.$auth_url;
 
 
