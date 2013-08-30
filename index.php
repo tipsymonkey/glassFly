@@ -28,9 +28,12 @@ function sflyAuthUser()
 }
 
 
+// writeXML
+// Returns a string with the xml requested to post in body
+
 function writeXML()
 {
-  $dom = new DOMDocument('1.0','utf-8');
+$dom = new DOMDocument('1.0','utf-8');
 
 $element = $dom->createElementNS('http://www.w3.org/2005/Atom','element');
 $element->setAttribute('xmlns:user','http://user.openfly.shutterfly.com/v1.0');
@@ -41,11 +44,11 @@ $category->setAttribute('term','user');
 $category->setAttribute('scheme','http://openfly.shutterfly.com/v1.0');
 $category->appendChild($dom->createTextNode(''));
 
-$userpass = $element->appendChild($dom->createElement('user:password','password\
-'));
+$userpass = $element->appendChild($dom->createElement('user:password','password'));
 
+return dom->saveXML();
+}
 
-echo $dom->saveXML();
 
 /*
     This is going to be debug section stuff. This doens't need to exist / only for now. 
