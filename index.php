@@ -30,14 +30,22 @@ function sflyAuthUser()
 
 function writeXML()
 {
-  $dom = new DomDocument('1.0', 'UTF-8');
+  $dom = new DOMDocument('1.0','utf-8');
 
-  $entry = $dom->appendChild($dom->createElementNS('http://www.w3.org/2005/Atom','entry'));
-  $dom->appendChild($entry);
-  $entry->setAttributeNS('http://www.w3.org/2005/Atom','xmlns:user', 'http://user.openfly.shutterfly.com/v1.0');
+$element = $dom->createElementNS('http://www.w3.org/2005/Atom','element');
+$element->setAttribute('xmlns:user','http://user.openfly.shutterfly.com/v1.0');
+$dom->appendChild($element);
 
-  echo $dom->saveXML();
-}
+$category = $element->appendChild($dom->createElement('category'));
+$category->setAttribute('term','user');
+$category->setAttribute('scheme','http://openfly.shutterfly.com/v1.0');
+$category->appendChild($dom->createTextNode(''));
+
+$userpass = $element->appendChild($dom->createElement('user:password','password\
+'));
+
+
+echo $dom->saveXML();
 
 /*
     This is going to be debug section stuff. This doens't need to exist / only for now. 
