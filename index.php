@@ -20,6 +20,25 @@ function getTimeStamp ()
         // Using format 'c' will do the right ISO date format needed. 
 		return $date->format('c');
 }
+
+function sflyAuthUser()
+{
+  // Pull the appid and the base url from the config.php
+  global $sfly_app_id, $sfly_base_url;
+}
+
+
+function writeXML()
+{
+  $dom = new DomDocument('1.0', 'UTF-8');
+
+  $entry = $dom->appendChild($dom->createElementNS('http://www.w3.org/2005/Atom','entry'));
+  $dom->appendChild($entry);
+  $entry->setAttributeNS('http://www.w3.org/2005/Atom','xmlns:user', 'http://user.openfly.shutterfly.com/v1.0');
+
+  echo $dom->saveXML();
+}
+
 /*
     This is going to be debug section stuff. This doens't need to exist / only for now. 
 */
@@ -42,7 +61,7 @@ $auth_url = "/user/ravasquez@shutterfly.com/auth?oflyAppId=".$sfly_app_id;
 
 
 
-
+/*
 $url = $sfly_base_url.$auth_url;
 
 
@@ -57,5 +76,8 @@ $response = curl_exec ($curl);
 curl_close ($curl);
 
 echo $response;
+
+*/
+writeXML();
 
 ?>
