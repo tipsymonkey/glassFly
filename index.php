@@ -43,7 +43,10 @@ function sflyAuthUser($user_email, $user_password) {
  
 
   $curl_response = curl_post($url,writeXML($user_password));
-  return $curl_response;
+  $entry = new SimpleXMLElement($curl_response);
+  $user = $entry->children("user",TRUE);
+
+  return $user->newAuthToken;
 }
 
 
@@ -70,18 +73,41 @@ return $dom->saveXML();
 
 
 
-$response = sflyAuthUser('raf@test94.com','test123');
-echo $response;
-$entry = new SimpleXMLElement($response);
+ $response = sflyAuthUser('raf@test94.com','test123');
+ //echo $response;
 
 
-echo "<p>----------<p>";
-$namespaces = $entry->getNamespaces(true);
-$child_test = $entry->children("user",TRUE);
+$img = imagecreatefromjpeg('test.jpeg');
 
-foreach ($child_test as $child_node) {
-  echo $child_node->getName()."<br>";
-}
-echo $child_test->newAuthToken;
+$srand = substr(md5(rand(0,32000)),0,10);
+$aform =      "----$srand\r\n";
+ 
+$submitdata = $aform;
+$submitdata .= "Content-Disposition: form-data; name=\"AuthenticationID\"\r\n\r\n";
+$submitdata .= "$response";
+$submitdata .= "\r\n".$aform;
+$submitdata .= "Content-Disposition: form-data; name=\"Image.Data\"\r\n\r\n";
+$submitdata .= "Content-Type: image/jpeg"."\r\n";
+$submitdata .= imagejpeg($img);
+$submitdata .= "\r\n"."----$srand"."--\r\n";
+
+$postdata = $submitdata;
+$posturl = "http://up3.shutterfly.com/images?".$sfly_app_id;
+
+ $ch = curl_init($posturl);
+ curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "Content-Type: multipart/form-data; boundary=--$srand");
+ curl_setopt($ch, CURLOPT_POST      ,1);
+ curl_setopt($ch, CURLOPT_POSTFIELDS    ,$postdata);
+ // curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+ curl_setopt($ch, CURLOPT_FOLLOWLOCATION  ,0);
+ // curl_setopt($ch, CURLOPT_COOKIE,  $mycookies);
+ curl_setopt($ch, CURLOPT_HEADER      ,1);  // DO NOT RETURN HTTP HEADERS
+ curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
+ $return = curl_exec($ch);
+ curl_close($ch);
+ echo $return;
+
+
+
 
 ?>
