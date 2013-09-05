@@ -79,23 +79,39 @@ return $dom->saveXML();
 
 $img = imagecreatefromjpeg('test.jpeg');
 
-$srand = substr(md5(rand(0,32000)),0,10);
-$aform =      "----$srand\r\n";
- 
-$submitdata = $aform;
-$submitdata .= "Content-Disposition: form-data; name=\"AuthenticationID\"\r\n\r\n";
-$submitdata .= "$response";
-$submitdata .= "\r\n".$aform;
-$submitdata .= "Content-Disposition: form-data; name=\"Image.Data\"\r\n\r\n";
-$submitdata .= "Content-Type: image/jpeg"."\r\n";
-$submitdata .= imagejpeg($img);
-$submitdata .= "\r\n"."----$srand"."--\r\n";
+$postdata = array(
+    'AuthenticationID' => $response,
+    'Image.AlbumName' => 'Glass Upload',
+    'Image.Data' => '@/Users/ravasquez/Sites/glassFly/test.jpeg'
+);
 
-$postdata = $submitdata;
+
+
+
+
+
+// $srand = substr(md5(rand(0,32000)),0,10);
+// $boundary_eol = "\r\n";
+// $aform =  "----".$srand.$boundary_eol;
+ 
+// $submitdata = $aform;
+// $submitdata .= "Content-Disposition: form-data; name=\"AuthenticationID\"\r\n\r\n";
+// $submitdata .= "$response";
+// $submitdata .= "\r\n".$aform;
+// $submitdata .= "Content-Disposition: form-data; name=\"Image.AlbumName\"".$boundary_eol.$boundary_eol;
+// $submitdata .= "Glass Upload";
+// $submitdata .= $boundary_eol.$aform;
+// $submitdata .= "Content-Disposition: form-data; name=\"Image.Data\"; filename=\"test.jpeg\"".$boundary_eol.$boundary_eol;
+// $submitdata .= "Content-Type: image/jpeg"."\r\n";
+// $submitdata .= $img_test['file'];
+// $submitdata .= "\r\n"."----$srand"."--\r\n";
+
+//$postdata = $submitdata;
 $posturl = "http://up3.shutterfly.com/images?".$sfly_app_id;
 
+echo $submitdata;
  $ch = curl_init($posturl);
- curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "Content-Type: multipart/form-data; boundary=--$srand");
+ //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "Content-Type: multipart/form-data");
  curl_setopt($ch, CURLOPT_POST      ,1);
  curl_setopt($ch, CURLOPT_POSTFIELDS    ,$postdata);
  // curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
@@ -105,7 +121,7 @@ $posturl = "http://up3.shutterfly.com/images?".$sfly_app_id;
  curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
  $return = curl_exec($ch);
  curl_close($ch);
- echo $return;
+ echo "<p>-----Return:<p>".$return;
 
 
 
